@@ -19,8 +19,23 @@ RUN set -ex && \
         git \
         openssl \
         openssh-client \
-        ca-certificates && \
-    mkdir -p /usr/src/node-red /data && \
+        ca-certificates \
+        python2-dev \
+        musl-dev \
+        gcc \
+        python3-dev \
+        py-pip \
+        python2 \
+        python3 \
+        py3-pip \
+        py3-wheel \
+        i2c-tools \
+        py3-urwid \
+        py3-smbus \
+        eudev-dev \
+        wiringpi \
+        wiringpi-dev && \
+    mkdir -p /usr/src/node-red /data && mkdir -p /usr/share/doc/python-rpi.gpio && \
     deluser --remove-home node && \
     adduser -h /usr/src/node-red -D -H node-red -u 1000 && \
     chown -R node-red:root /data && chmod -R g+rwX /data && \
@@ -43,7 +58,7 @@ COPY flows.json /data
 FROM base AS build
 
 # Install Build tools
-RUN apk add --no-cache --virtual buildtools build-base linux-headers udev python2 && \
+RUN mkdir -p /usr/local/sbin/ && ln -s /usr/local/bin/node /usr/local/sbin/node && apk add --no-cache --virtual buildtools build-base linux-headers udev python2 && \
     npm install --unsafe-perm --no-update-notifier --no-fund --only=production && \
     /tmp/remove_native_gpio.sh && \
     cp -R node_modules prod_node_modules
