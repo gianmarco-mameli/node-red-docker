@@ -1,6 +1,6 @@
 # ARG ARCH=amd64
-ARG NODE_VERSION=14
-ARG OS=alpine3.12
+ARG NODE_VERSION=16
+ARG OS=alpine
 
 #### Stage BASE ########################################################################################################
 FROM node:${NODE_VERSION}-${OS} AS base
@@ -20,19 +20,17 @@ RUN set -ex && \
         openssl \
         openssh-client \
         ca-certificates \
-        python2-dev \
-        musl-dev \
-        gcc \
-        python3-dev \
-        py-pip \
-        python2 \
-        python3 \
-        py3-pip \
-        py3-wheel \
-        i2c-tools \
-        py3-urwid \
-        py3-smbus \
         eudev-dev \
+        gcc \
+        i2c-tools \
+        musl-dev \
+        py-pip \
+        py3-pip \
+        py3-smbus \
+        py3-urwid \
+        py3-wheel \
+        python3 \
+        python3-dev \
         wiringpi \
         wiringpi-dev && \
     mkdir -p /usr/src/node-red /data && mkdir -p /usr/share/doc/python-rpi.gpio && \
@@ -49,16 +47,18 @@ WORKDIR /usr/src/node-red
 # Setup SSH known_hosts file
 COPY known_hosts.sh .
 RUN ./known_hosts.sh /etc/ssh/ssh_known_hosts && rm /usr/src/node-red/known_hosts.sh
+RUN echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
 
 # package.json contains Node-RED NPM module and node dependencies
 COPY package.json .
 COPY flows.json /data
+COPY scripts/entrypoint.sh .
 
 #### Stage BUILD #######################################################################################################
 FROM base AS build
 
 # Install Build tools
-RUN mkdir -p /usr/local/sbin/ && ln -s /usr/local/bin/node /usr/local/sbin/node && apk add --no-cache --virtual buildtools build-base linux-headers udev python2 && \
+RUN apk add --no-cache --virtual buildtools build-base linux-headers udev python3 && \
     npm install --unsafe-perm --no-update-notifier --no-fund --only=production && \
     /tmp/remove_native_gpio.sh && \
     cp -R node_modules prod_node_modules
@@ -92,6 +92,8 @@ RUN chown -R node-red:root /usr/src/node-red && \
     /tmp/install_devtools.sh && \
     rm -r /tmp/*
 
+RUN npm config set cache /data/.npm --global
+
 USER node-red
 
 # Env variables
@@ -109,4 +111,5 @@ EXPOSE 1880
 # Add a healthcheck (default every 30 secs)
 # HEALTHCHECK CMD curl http://localhost:1880/ || exit 1
 
-ENTRYPOINT ["npm", "start", "--cache", "/data/.npm", "--", "--userDir", "/data"]
+# ENTRYPOINT ["npm", "start", "--cache", "/data/.npm", "--", "--userDir", "/data"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,9 +1,9 @@
 ARG ARCH=amd64
-ARG NODE_VERSION=14
-ARG OS=alpine3.12
+ARG NODE_VERSION=16
+ARG OS=alpine
 
 #### Stage BASE ########################################################################################################
-FROM node:${NODE_VERSION}-${OS} AS base
+FROM ${ARCH}/node:${NODE_VERSION}-${OS} AS base
 
 # Copy scripts
 COPY scripts/*.sh /tmp/
@@ -79,7 +79,7 @@ RUN chown -R node-red:root /usr/src/node-red && \
     /tmp/install_devtools.sh && \
     rm -r /tmp/*
 
-RUN npm config set cache /data/.npm --global 
+RUN npm config set cache /data/.npm --global
 
 USER node-red
 
