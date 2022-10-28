@@ -46,8 +46,10 @@ WORKDIR /usr/src/node-red
 
 # Setup SSH known_hosts file
 COPY known_hosts.sh .
-RUN ./known_hosts.sh /etc/ssh/ssh_known_hosts && rm /usr/src/node-red/known_hosts.sh
-RUN echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
+RUN chmod +x ./known_hosts.sh \
+    && ./known_hosts.sh /etc/ssh/ssh_known_hosts \
+    && rm /usr/src/node-red/known_hosts.sh \
+    && echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
 
 # package.json contains Node-RED NPM module and node dependencies
 COPY package.json .
@@ -103,7 +105,7 @@ ENV NODE_RED_VERSION=$NODE_RED_VERSION \
     FLOWS=flows.json
 
 # ENV NODE_RED_ENABLE_SAFE_MODE=true    # Uncomment to enable safe start mode (flows not running)
-# ENV NODE_RED_ENABLE_PROJECTS=true     # Uncomment to enable projects option
+ENV NODE_RED_ENABLE_PROJECTS=true
 
 # Expose the listening port of node-red
 EXPOSE 1880
