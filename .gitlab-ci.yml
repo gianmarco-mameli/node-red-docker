@@ -18,9 +18,6 @@ before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - docker run --privileged --rm tonistiigi/binfmt --install all
   - docker buildx create --use --bootstrap --name ${BUILDER_IMAGE} --config=buildkitd.toml
-  - >
-    VERSION=$(sed -rn 's/^\s*\"node-red\": \"([0-9]+\.[0-9]+\.[0-9]+)\"\s*/\1/p' package.json)
-  - echo $VERSION
 
 after_script:
   - docker buildx stop ${BUILDER_IMAGE}
@@ -52,7 +49,10 @@ build_image:
   stage: build
   script:
     # - docker buildx create --use --name ${BUILDER_IMAGE} --config=buildkitd.toml
-    - docker buildx bake --push --build-arg VERSION=${VERSION} --file package_bake.hcl --progress plain
+    - >
+      VERSION=$(sed -rn 's/^\s*\"node-red\": \"([0-9]+\.[0-9]+\.[0-9]+)\"\s*/\1/p' package.json)
+    - echo $VERSION
+    - docker buildx bake --push --file package_bake.hcl --progress plain
   rules:
     - changes:
         - Dockerfile
