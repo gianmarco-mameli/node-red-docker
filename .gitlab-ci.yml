@@ -45,7 +45,7 @@ buildkit_toml:
   allow_failure: true
   rules:
     - changes:
-      - Dockerfile*
+      - docker-custom/Dockerfile*
   # when: manual
 
 # build_image:
