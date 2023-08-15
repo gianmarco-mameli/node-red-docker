@@ -52,7 +52,7 @@ build_image:
   stage: build
   script:
     # - docker buildx create --use --name ${BUILDER_IMAGE} --config=buildkitd.toml
-    - docker buildx bake --push --file package_bake.hcl --progress plain
+    - docker buildx bake --push --build-arg VERSION=${VERSION} --file package_bake.hcl --progress plain
   rules:
     - changes:
         - Dockerfile
