@@ -11,7 +11,7 @@ variable "REGISTRY_IMAGE" {
 // }
 
 target "default" {
-  dockerfile = "docker-custom/Dockerfile"
+  dockerfile = "Dockerfile"
   args = {
   }
   platforms = ["linux/arm/v7","linux/arm64"]
