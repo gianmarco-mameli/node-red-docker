@@ -11,7 +11,7 @@ image: docker:$DOCKER_VERSION
 
 stages:
   - linting
-  # - build
+  - build
   # - publish
 
 before_script:
@@ -48,19 +48,19 @@ buildkit_toml:
   #     - docker-custom/Dockerfile*
   # when: manual
 
-# build_image:
-#   stage: build
-#   script:
-#     # - docker buildx create --use --name ${BUILDER_IMAGE} --config=buildkitd.toml
-#     - docker buildx bake --push --file package_bake.hcl --progress plain
-#   rules:
-#     - changes:
-#         - Dockerfile
-#         - .gitlab-ci.yml
-#         - package_bake.hcl
-#   after_script:
-#     - docker buildx stop ${BUILDER_IMAGE}
-#     - docker buildx rm ${BUILDER_IMAGE}
+build_image:
+  stage: build
+  script:
+    # - docker buildx create --use --name ${BUILDER_IMAGE} --config=buildkitd.toml
+    - docker buildx bake --push --file package_bake.hcl --progress plain
+  rules:
+    - changes:
+        - Dockerfile
+        - .gitlab-ci.yml
+        - package_bake.hcl
+  after_script:
+    - docker buildx stop ${BUILDER_IMAGE}
+    - docker buildx rm ${BUILDER_IMAGE}
 
 # publish_image:
 #   stage: publish
