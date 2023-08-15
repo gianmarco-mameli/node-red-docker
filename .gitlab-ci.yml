@@ -1,8 +1,8 @@
 variables:
-  IMAGE_NAME: "nodered"
+  IMAGE_NAME: nodered
   # VERSION: "1.0"
 
-  DOCKER_VERSION: 24.0.5
+  # DOCKER_VERSION: 24.0.5
   DIND_VERSION: $DOCKER_VERSION-dind
 
   BUILDER_IMAGE: "${IMAGE_NAME}-builder-$CI_CONCURRENT_ID"
@@ -43,9 +43,9 @@ buildkit_toml:
   script:
     - hadolint docker-custom/Dockerfile
   allow_failure: true
-  rules:
-    - changes:
-      - docker-custom/Dockerfile*
+  # rules:
+  #   - changes:
+  #     - docker-custom/Dockerfile*
   # when: manual
 
 # build_image:
