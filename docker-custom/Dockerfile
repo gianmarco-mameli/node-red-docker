@@ -61,7 +61,7 @@ FROM base AS build
 
 # Install Build tools
 RUN apk add --no-cache --virtual buildtools build-base linux-headers udev python3 && \
-    npm install --prefix="$HOME/.local" --unsafe-perm --no-update-notifier --no-fund --only=production && \
+    npm install --unsafe-perm --no-update-notifier --no-audit --no-fund --only=production && \
     /tmp/remove_native_gpio.sh && \
     cp -R node_modules prod_node_modules
 
