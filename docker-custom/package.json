@@ -49,7 +49,6 @@
         "node-red-contrib-msg-resend": "latest",
         "node-red-contrib-netatmo-dashboard": "latest",
         "node-red-contrib-netatmo": "latest",
-        "node-red-contrib-oled": "latest",
         "node-red-contrib-pcf8574-lcd": "latest",
         "node-red-contrib-pisupply-pijuice-pis0212": "latest",
         "node-red-contrib-pushover": "latest",
