@@ -60,6 +60,7 @@
         "node-red-contrib-telegrambot": "latest",
         "node-red-contrib-throttle": "latest",
         "node-red-contrib-time-range-switch": "latest",
+        "node-red-contrib-zigbee2mqtt": "latest",
         "node-red-dashboard": "latest",
         "node-red-node-arduino": "latest",
         "node-red-node-daemon": "latest",
